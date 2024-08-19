@@ -20,12 +20,20 @@ This project is a web application that allows users to search for GitHub profile
 
 This project uses the [GitHub REST API](https://docs.github.com/en/rest) to retrieve user profile information. When a username is entered and the search button is clicked, an API call is made to `https://api.github.com/users/{username}`, where `{username}` is the name of the GitHub user being searched.
 
-### Example API Request
+### Example API Request Using `try-catch`
 
 ```javascript
-fetch(`https://api.github.com/users/vercel`)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-    // Display the data on the page
-  });
+async function fetchGitHubProfile(username) {
+    try {
+        const response = await fetch(`https://api.github.com/users/${username}`);
+        if (!response.ok) {
+            throw new Error(`User not found: ${response.statusText}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        // Display the data on the page
+    } catch (error) {
+        console.error('Error fetching the GitHub profile:', error);
+        // Handle the error (e.g., show an error message on the page)
+    }
+}
